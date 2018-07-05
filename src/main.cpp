@@ -15,7 +15,7 @@ String userInput;
 String xyzKey;
 String tempos;
 
-int pos = 0;
+int pos = 90;
 int xPinServo = 4;
 int yPinServo = 5;
 int zPinServo = 6;
@@ -30,27 +30,32 @@ void setup() {
 
 void loop() {
   //Serial.read();
-  while(Serial.available()) {
+  if(Serial.available()) {
+    //get input
     userInput = Serial.readString();// read the incoming data as string
-
-    xyzKey = userInput.substring(1,2);
-  }
-
-  fgets(buffer, 100, stdin);
-  pos = atoi(buffer);
-  pos = pos + 90;
-
-  if(xyzKey = "X"||"x"){
-    xPosServo.write(pos);
-  }
-  else if(xyzKey = "Y"||"y");{
-    yPosServo.write(pos);
-  }
-  if(xyzKey = "Z"||"z");{
-    zPosServo.write(pos);
+    //try to get the axis
+    xyzKey = userInput.substring(0,2);
+    Serial.print(xyzKey);
+    //get the start of the number
+    //int startNum = userInput.find(":");
+    //extract numberString
+    String degree = userInput.substring(2,5);
+    Serial.println(degree);
+    //convert to float
+    float actualDegree = degree.toFloat();
+    //offset
+    float pos = actualDegree + 90;
+    if(xyzKey.equalsIgnoreCase("X")){
+      xPosServo.write(pos);
+    }
+    else if(xyzKey.equalsIgnoreCase("Y"));{
+      yPosServo.write(pos);
+    }
+    if(xyzKey.equalsIgnoreCase("Z"));{
+      zPosServo.write(pos);
+    }
   }
 }
-
 
 //make it so that user types in something like x:-23
 //make it from ranges -90 to 90   |||   translate from 0 to 180
